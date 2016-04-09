@@ -1,3 +1,3 @@
 # Dialog-Module
 自己实现的弹窗组件 
-fdfd
+http://wufenfen.github.io/Dialog-Module/index.html
