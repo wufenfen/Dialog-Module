@@ -24,9 +24,7 @@
         box-sizing: border-box;
     }
     
-    .header {
-        background-color: #d8e9f9;
-        height: 40px;
+    .header {  
         line-height: 40px;
         padding: 0 10px;
     }
@@ -38,9 +36,8 @@
     }
     
     .footer {
-        border-top: 1px solid #D1D1D1;
-        height: 20px;
         padding: 15px;
+        border-top: 1px solid #D1D1D1; 
         text-align: right;
     }
     
@@ -62,20 +59,15 @@
        
         //默认的配置项
         var options = {
-            width: 400,
-            height: 'auto',
+            width: 400, 
             bodySkin: '#fff',
-            headSkin: '#999999',
+            headSkin: '#d8e9f9',
             title: '提醒',
             content: '我是弹窗内容',
             okBtnTxt: '确定',
-            okBtnCB: _okFun,
-            hasCancleBtn: true,
+            okBtnCB: _okFun, 
             cancelBtnTxt: '取消',
-            cancelBtnCB: _cancelFun,
-            draggable: false,
-            resize: false,
-
+            cancelBtnCB: _cancelFun 
         };
 
         var _okFun = function() {
@@ -86,7 +78,7 @@
             //close the dialog
             dialog.style.display = 'none';
         }
-        
+
         var _init = function(userOptions) {
             if (userOptions) {
                 for (var x in userOptions) {
@@ -96,8 +88,8 @@
 
             var div = document.createElement('div');
             var dialogHTML = '<div class="background" id="dialog"> \
-                <div class="dialog"> \
-                    <div class="header"> \
+                <div class="dialog" style="background-color:' + options.bodySkin + ';width:' + options.width + 'px"> \
+                    <div class="header" style="background-color:'+ options.headSkin +'"> \
                         <span id="title">' + options.title + '</span> \
                         <span class="text-right"> ×</span> \
                     </div> \
@@ -111,11 +103,11 @@
             dialog = document.getElementById("dialog");
             var okBtn = document.getElementById("ok");
             var cancelBtn = document.getElementById("cancel");
-            okBtn.addEventListener('click', _okFun);
+            okBtn.addEventListener('click', options.okBtnCB);
             if (!options.hasCancleBtn) { //add the cancle Btn
                 cancelBtn.style.display = 'none';
             } else {
-                cancelBtn.addEventListener('click', _cancelFun);
+                cancelBtn.addEventListener('click', options.cancelBtnCB);
             }
         }
 
@@ -125,6 +117,7 @@
         }
 
         this.confirm = function(options) {
+            options.hasCancleBtn = true; 
             _init(options);
         } 
     }
@@ -136,8 +129,13 @@
     var con = document.getElementById("text").innerText;
     var dialog = new Dialog();
     dialog.confirm({
+        bodySkin: '#f4f4f4',
+        width: 700,
         title: "确认对话框提示",
-        content: con 
+        content: con,
+        okBtnCB: function(){
+            alert('Are you sure?');
+        }
     });
 </script>
 </body>
