@@ -20,7 +20,6 @@
     
     .dialog {
         width: 400px;
-        border-radius: 10px;
         background-color: white;
         box-sizing: border-box;
     }
@@ -29,7 +28,7 @@
         background-color: #d8e9f9;
         height: 40px;
         line-height: 40px;
-        padding-left: 10px;
+        padding: 0 10px;
     }
     
     .content {
@@ -48,77 +47,99 @@
     .text-right {
         float: right;
     }
+
+    .footer button{
+        margin-left: 30px;
+    }
     </style>
 </head>
 
 <body>
-    <script id="text" type="text/wuff">
-        这里的内容可以随便长，作为对话框的内容。
-    </script>
-    <script>
+    
+<script>
     function Dialog() {
-        var dialog = document.createElement('div');
-        var dialogHTML = '<div class="background" id="dialog"> \
-        <div class="dialog"> \
-            <div class="header"> \
-                <span id="title">提醒</span> \
-                <span class="text-right"> ×</span> \
-            </div> \
-            <div class="content" id="content"> \
-                我是弹窗的内容，这个内容是可以被配置的。标题也是同样的。 \
-            </div> \
-            <div class="footer"> \
-                <button type="button" id="cancel">取消</button> \
-                <button type="button" id="ok">确认</button> \
-            </div> \
-        </div> \
-    </div>';
-        dialog.innerHTML = dialogHTML;
-        document.body.appendChild(dialog);
-        this.open = function(options) {
+        var dialog; 
+       
+        //默认的配置项
+        var options = {
+            width: 400,
+            height: 'auto',
+            bodySkin: '#fff',
+            headSkin: '#999999',
+            title: '提醒',
+            content: '我是弹窗内容',
+            okBtnTxt: '确定',
+            okBtnCB: _okFun,
+            hasCancleBtn: true,
+            cancelBtnTxt: '取消',
+            cancelBtnCB: _cancelFun,
+            draggable: false,
+            resize: false,
 
-            if (options.title) {
-                document.getElementById("title").innerText = options.title;
-            }
-            if (options.content) {
-                document.getElementById("content").innerText = options.content;
-            }
-            if (options.cancelBtnTxt) {
-                document.getElementById("cancel").innerText = options.cancelBtnTxt;
-            }
-            if (options.okBtnTxt) {
-                document.getElementById("ok").innerText = options.okBtnTxt;
+        };
+
+        var _okFun = function() {
+            //do nothing
+        }
+
+        var _cancelFun = function() {
+            //close the dialog
+            dialog.style.display = 'none';
+        }
+        
+        var _init = function(userOptions) {
+            if (userOptions) {
+                for (var x in userOptions) {
+                    options[x] = userOptions[x];
+                }
             }
 
+            var div = document.createElement('div');
+            var dialogHTML = '<div class="background" id="dialog"> \
+                <div class="dialog"> \
+                    <div class="header"> \
+                        <span id="title">' + options.title + '</span> \
+                        <span class="text-right"> ×</span> \
+                    </div> \
+                    <div class="content" id="content"> ' + options.content + '</div> \
+                    <div class="footer"></button><button type = "button" id = "cancel" > ' + options.cancelBtnTxt + 
+                    ' <button type = "button" id = "ok" > ' + options.okBtnTxt + 
+                    ' </button> </div>  </div> </div>';
+            div.innerHTML = dialogHTML;
+            document.body.appendChild(div);
+
+            dialog = document.getElementById("dialog");
             var okBtn = document.getElementById("ok");
             var cancelBtn = document.getElementById("cancel");
-            var dialog = document.getElementById("dialog");
-            okBtn.addEventListener('click', function() {
-                var anotherDialog = new Dialog();
-                anotherDialog.open({
-                    title: "Dialog_",
-                    content: "This is new world ",
-                    okBtnTxt: "surprise",
-                    cancelBtnTxt: "boring"
-                });
-
-            })
-
-            cancelBtn.addEventListener('click', function() {
-                dialog.style.display = 'none';
-            })
+            okBtn.addEventListener('click', _okFun);
+            if (!options.hasCancleBtn) { //add the cancle Btn
+                cancelBtn.style.display = 'none';
+            } else {
+                cancelBtn.addEventListener('click', _cancelFun);
+            }
         }
-    }
 
-    var dialog = new Dialog();
+        this.alert = function(options) {
+            options.hasCancleBtn = false;
+            _init(options);
+        }
+
+        this.confirm = function(options) {
+            _init(options);
+        } 
+    }
+</script>
+<script id="text" type="text/wuff">
+        这里的内容可以随便长，作为对话框的内容。
+</script>
+<script>
     var con = document.getElementById("text").innerText;
-    dialog.open({
-        title: "配置的标题",
-        content: con,
-        okBtnTxt: "再弹出一个窗口",
-        cancelBtnTxt: "关闭当前窗口"
+    var dialog = new Dialog();
+    dialog.confirm({
+        title: "确认对话框提示",
+        content: con 
     });
-    </script>
+</script>
 </body>
 
 </html>
